@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	tokenVar     = "SLACKSOC_TOKEN"
-	noTokenError = "You must have the SLACKSOC_TOKEN variable to run the" +
-		" slacksoc bot"
+	tokenVar     = "HACKCWRU_BOT_TOKEN"
+	noTokenError = "You must have the HACKCWRU_BOT_TOKEN variable to run the" +
+		" hackcwru bot"
 	version = "0.2.2"
 )
 
@@ -39,8 +39,9 @@ func setRealNameFields(bot *slack.Bot, event map[string]interface{}) (*slack.Mes
 	}
 	user := payload["user"].(map[string]interface{})
 	nick := user["name"].(string)
-	text := "Please set your real name fields. https://hacsoc.slack.com/team/%s."
-	text += " Then click \"Edit\"."
+	text := "Welcome to HackCWRU! Please set your real name fields. " +
+		"https://hackcwru.slack.com/team/%s. " +
+		"Then click \"Edit\". Happy hacking!"
 	text = fmt.Sprintf(text, nick)
 	dm := <-dmChan
 	return slack.NewMessage(text, dm), slack.Continue
@@ -63,10 +64,7 @@ func main() {
 	bot.Respond("pm me", sendDM)
 	bot.Respond("((what's)|(tell me) your)? ?version??",
 		slack.Respond(fmt.Sprintf("My version is %s. My lib version is %s", version, slack.Version)))
-	bot.Listen("gentoo", slack.React("funroll-loops"))
-	bot.Listen(".+\\bslacksoc\\b", slack.React("raisedeyebrow"))
 	bot.OnEventWithSubtype("message", "channel_join", setRealNameFields)
-	fmt.Println("Starting bot")
 	if err := bot.Start(); err != nil {
 		fmt.Println(err)
 	}
